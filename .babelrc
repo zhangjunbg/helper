@@ -1,0 +1,34 @@
+{
+  "env": {
+    "node": {
+      "presets": [
+        ["env", {
+          "modules": false,
+          "targets": {
+            "node": "current"
+          }
+        }]
+      ],
+      "plugins": [
+        "transform-object-rest-spread",
+        "syntax-dynamic-import",
+        "transform-object-assign"
+      ]
+    },
+    "web": {
+      "presets": [
+        ["env", {
+          "modules": false,
+          "targets": {}
+        }]
+      ],
+      "plugins": [
+        "transform-object-rest-spread",
+        "syntax-dynamic-import",
+        "transform-object-assign",
+        "transform-runtime"
+      ]
+    }
+  },
+  "comments": false
+}
