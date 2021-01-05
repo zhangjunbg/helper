@@ -15,7 +15,7 @@
     "ii": "npm install --registry https://registry.npm.taobao.org"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-core": "6.26.3",
     "babel-eslint": "8.2.6",
     "babel-helper-vue-jsx-merge-props": "2.0.3",
