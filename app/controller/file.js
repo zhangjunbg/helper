@@ -44,14 +44,15 @@ module.exports = class CommController extends egg.Controller {
           filePath: tempPath,
           children: children,
         };
-        result.push(tempFile);
+        result.push(...children);
       } else {
         tempFile = {
           isDirectory: false,
           filePath: tempPath,
+          size: (stats.size / 1024 / 1024).toFixed(2) + 'M',
         };
+        if (file != '.DS_Store') result.push(tempFile);
       }
-      // if (file != '.DS_Store') result.push(tempFile);
     }
     return result;
   }
