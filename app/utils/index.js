@@ -1,5 +1,5 @@
 function bigFirst(word) {
-  let tempArr = word.split('_');
+  let tempArr = word.split(/[_ ]/);
   let temp;
   let resultArr = tempArr.map((name) => {
     temp = [...name];
@@ -9,6 +9,13 @@ function bigFirst(word) {
   return resultArr.join('_');
 }
 
+function getPathFolder(filePath) {
+  let tempArr2 = filePath.split('/');
+  tempArr2.pop();
+  return tempArr2.join('/');
+}
+
 module.exports = {
   bigFirst,
+  getPathFolder,
 };

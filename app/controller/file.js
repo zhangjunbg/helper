@@ -6,8 +6,8 @@ const { bigFirst } = require('../utils/index');
 const egg = require('egg');
 const path = require('path');
 const commPath = path.resolve(__dirname, '../../../static');
-const oldPath = commPath + '/old/红火箭分级读物';
-// const oldPath = '/Volumes/Lily/绘本/红火箭分级读物';
+// const oldPath = commPath + '/old/红火箭分级读物';
+const oldPath = '/Volumes/Lily/绘本/On_Our_Way_to_English';
 const newPath = commPath + '/new';
 const oldFiles = require('../data/oldFiles');
 const newFiles = require('../data/newFiles');
@@ -44,9 +44,6 @@ module.exports = class CommController extends egg.Controller {
         fs.mkdirSync(newParPath, { recursive: true });
         allPath[newParPath] = true;
       }
-      // fs.access(oldPath + filePath, constants.F_OK, (err) => {
-      //   if (!err) rename(oldPath + filePath, newPath + newFilePath);
-      // });
       fs.access(filePath, constants.F_OK, (err) => {
         if (!err) rename(filePath, newFilePath);
       });
@@ -80,11 +77,7 @@ module.exports = class CommController extends egg.Controller {
     let { isFolder } = ctx.request.query;
     console.log('isFolder: ', isFolder);
     let allFiles = await this.getFiles(oldPath, isFolder);
-    ctx.body = {
-      code: '00',
-      data: allFiles,
-      msg: null,
-    };
+    ctx.body = allFiles;
   }
   // 获取文件夹下的文件夹及文件
   async getFiles(folderPath, isFolder) {
@@ -107,5 +100,35 @@ module.exports = class CommController extends egg.Controller {
       }
     }
     return result;
+  }
+  // 递归获取文件夹下总文件数
+  async getAllFolderPageNum(ctx) {
+    let allFiles = await this.getFileNums(oldPath);
+    ctx.body = allFiles;
+  }
+  // 获取文件夹下的文件夹及文件
+  async getFileNums(folderPath) {
+    if (!folderPath) return [];
+    let files = fs.readdirSync(folderPath);
+    let result = [];
+    let result2 = {};
+    let stats, tempPath, file;
+    for (let i = 0; i < files.length; i++) {
+      file = files[i];
+      tempPath = folderPath + '/' + file;
+      stats = fs.statSync(tempPath);
+      // 判断是否为文件夹
+      if (stats.isDirectory()) {
+        let children = await this.getFileNums(tempPath);
+        console.log('children: ', children);
+        result2 = { ...result2, ...children };
+      } else {
+        if (file != '.DS_Store') {
+          result.push(tempPath);
+        }
+      }
+    }
+    result2 = { ...result2, [folderPath]: result.length };
+    return result2;
   }
 };

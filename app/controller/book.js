@@ -7,9 +7,9 @@ const path = require('path');
 const commPath = path.resolve(__dirname, '../../../static');
 // const oldPath = commPath + '/old';
 // const newPath = commPath + '/new';
-const oldPath = '/Volumes/Lily/绘本/红火箭分级读物';
-const newPath = '/Volumes/Lily/绘本/红火箭分级读物/img';
-const hong = require('../data/hong');
+const oldPath = '/Volumes/Lily/绘本/牛津树1-9级/pdf';
+const newPath = '/Volumes/Lily/绘本/牛津树1-9级/img';
+const hong = require('../data/1_9');
 module.exports = class CommController extends egg.Controller {
   // pdf 转图片
   pdf2pic2(ctx) {
