@@ -8,4 +8,5 @@ module.exports = (app) => {
   app.get('/upperAllNames', controller.file.upperAllNames);
   app.get('/png2jpg', controller.mini.png2jpg);
   app.get('/getAllFolderPageNum', controller.file.getAllFolderPageNum);
+  app.get('/pdfParser', controller.pdf.pdfParser);
 };

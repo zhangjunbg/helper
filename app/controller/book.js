@@ -30,8 +30,8 @@ module.exports = class CommController extends egg.Controller {
       // 创建文件
       mkdirsSync(newPath + fileName);
       fromPath(oldPath + filePath, {
-        width: 2550,
-        height: 3300,
+        width: 1860,
+        height: 1313,
         // width: 3364,
         // height: 2380,
         saveFilename: 'test',
