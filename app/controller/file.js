@@ -7,7 +7,7 @@ const egg = require('egg');
 const path = require('path');
 const commPath = path.resolve(__dirname, '../../../static');
 // const oldPath = commPath + '/old/红火箭分级读物';
-const oldPath = '/Volumes/Lily/resource/On_Our_Way_to_English/pdf';
+const oldPath = '/Volumes/Lily/resource/牛津树/mp3/2';
 const newPath = commPath + '/new';
 const oldFiles = require('../data/oldFiles');
 const newFiles = require('../data/newFiles');
@@ -52,7 +52,7 @@ module.exports = class CommController extends egg.Controller {
   // 文件名首字母大写
   async upperAllNames(ctx) {
     oldFiles.forEach((item) => {
-      this.upperNames(item);
+      if (item) this.upperNames(item);
     });
     ctx.body = {
       code: '00',
@@ -65,8 +65,9 @@ module.exports = class CommController extends egg.Controller {
     let subfix = tempArr.pop(); // 文件后缀
     let tempArr2 = tempArr.join('.').split('/');
     let fileName = bigFirst(tempArr2.pop());
+    console.log(fileName);
     let newFileName = tempArr2.join('/') + '/' + fileName + '.' + subfix;
-    console.log(filePath, newFileName);
+    // console.log(filePath, newFileName);
     fs.access(oldPath + filePath, constants.F_OK, (err) => {
       if (!err) rename(oldPath + filePath, oldPath + newFileName);
     });
@@ -131,4 +132,6 @@ module.exports = class CommController extends egg.Controller {
     result2 = { ...result2, [folderPath]: result.length };
     return result2;
   }
+  // 重置文件夹下文件名称
+  async resetPageIndex(ctx) {}
 };

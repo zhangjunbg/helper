@@ -9,4 +9,5 @@ module.exports = (app) => {
   app.get('/png2jpg', controller.mini.png2jpg);
   app.get('/getAllFolderPageNum', controller.file.getAllFolderPageNum);
   app.get('/pdfParser', controller.pdf.pdfParser);
+  app.get('/cropImg', controller.mini.cropImg);
 };

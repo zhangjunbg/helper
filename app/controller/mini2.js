@@ -4,10 +4,10 @@ const egg = require('egg');
 const { mkdirsSync } = require('fs-extra');
 const gm = require('gm');
 const miniList = require('../data/png_dora');
-const cropData = require('../data/convert/niujin');
+const cropData = require('../data/convert/cropData');
 const cropDataKeys = Object.keys(cropData);
-const oldPath = '/Volumes/Lily/resource/牛津树/png/todo';
-const newPath = '/Volumes/Lily/resource/牛津树/png/todo2';
+const oldPath = '/Volumes/Lily/resource/On_Our_Way_to_English/png';
+const newPath = '/Volumes/Lily/resource/On_Our_Way_to_English/jpgCon1';
 module.exports = class MiniController extends egg.Controller {
   png2jpg(ctx) {
     this.allPng2jpg(0);
@@ -29,7 +29,7 @@ module.exports = class MiniController extends egg.Controller {
     gm(oldPath + filePath)
       // .resize(2475, 1750)
       // width: 1836, height: 1547
-      // .crop(2390, 3680, 0, 0)
+      .crop(1836 + 106, 1547, 192, 0)
       .write(newPath + newFilePath, (err) => {
         console.log(err);
         this.allPng2jpg(++index);
@@ -43,20 +43,37 @@ module.exports = class MiniController extends egg.Controller {
     let singleData = cropData[cropDataKeys[index]];
     let { width, height, x, orient } = singleData;
     let filePath = singleData.path;
-    // let filePath = '/' + cropDataKeys[index];
-
     let oldFolder = oldPath + filePath;
     let newFolder = newPath + filePath;
     let w = 0,
-      h = 0;
+      h = 0,
+      xx = 0,
+      yy = 0;
 
-    if (orient == 'right') {
-      w = -x;
-    } else if (orient == 'bottom') {
-      h = -x;
+    if (width > height) {
+      w = 490;
+      if (orient == 'left') {
+        w = w - 2 * x;
+        xx = x;
+      } else if (orient == 'top') {
+        h = -2 * x;
+        yy = x;
+      } else if (orient == 'bottom') {
+        h = -x;
+        // yy = x;
+      }
+    } else {
+      h = 490;
+      if (orient == 'left') {
+        w = -2 * x;
+        xx = x;
+      } else if (orient == 'top') {
+        h = h - 2 * x;
+        yy = x;
+      }
     }
 
-    let opt = { width: width + w, height: height + h, x: 0, y: 0, oWidth: width, oHeight: parseInt((width * 1222) / 1600) };
+    let opt = { width: width + w, height: height + h, x: xx, y: yy, oWidth: width, oHeight: height };
     mkdirsSync(newFolder);
     // 获取文件夹下文件
     let files = fs.readdirSync(oldFolder);
