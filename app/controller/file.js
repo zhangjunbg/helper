@@ -7,8 +7,9 @@ const egg = require('egg');
 const path = require('path');
 const commPath = path.resolve(__dirname, '../../../static');
 // const oldPath = commPath + '/old/红火箭分级读物';
-const oldPath = '/Volumes/Lily/resource/牛津树/mp3/2';
-const newPath = commPath + '/new';
+const oldPath = '/Volumes/Lily/resource/huiben/红火箭/jpg2/1';
+const newPath = '/Volumes/Lily/resource/绘本3';
+// const newPath = commPath + '/new';
 const oldFiles = require('../data/oldFiles');
 const newFiles = require('../data/newFiles');
 

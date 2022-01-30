@@ -2,7 +2,7 @@
 const fs = require('fs');
 const egg = require('egg');
 const pdfData = require('../data/pdf');
-const oldPath = '/Volumes/Lily/resource/On_Our_Way_to_English/pdf';
+const oldPath = '/Volumes/Lily/resource/爱探险的朵拉/pdf';
 const PDFParser = require('pdf2json');
 var allFile = {};
 module.exports = class MiniController extends egg.Controller {
@@ -17,9 +17,9 @@ module.exports = class MiniController extends egg.Controller {
       const pdfParser = new PDFParser();
       pdfParser.on('pdfParser_dataError', (errData) => console.error(errData.parserError));
       pdfParser.on('pdfParser_dataReady', (pdfData) => {
-        console.log(pdfData);
+        // console.log(pdfData);
         let { Width, Height } = pdfData.Pages[0];
-        allFile[temp] = { width: Width, height: Height };
+        allFile[temp] = pdfData.Pages;
         console.log(temp);
         this.pdfParser2(++index);
       });

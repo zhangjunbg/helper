@@ -9,7 +9,7 @@ const cropDataKeys = Object.keys(cropData);
 const oldPath = '/Volumes/Lily/resource/美语动物园绘本集2/png/book';
 const newPath = '/Volumes/Lily/resource/美语动物园绘本集/jpg';
 module.exports = class MiniController extends egg.Controller {
-  png2jpg(ctx) {
+  splitPng(ctx) {
     this.allPng2jpg(0);
     ctx.body = {};
   }
@@ -19,6 +19,7 @@ module.exports = class MiniController extends egg.Controller {
     let [a, otherFolder, pageIndex] = reg.exec(filePath);
 
     let newFilePath = `/${otherFolder}/${pageIndex}.jpg`;
+
     mkdirsSync(`${newPath}/${otherFolder}`);
     // 1275 × 1755
     // width: 1035,
@@ -28,7 +29,7 @@ module.exports = class MiniController extends egg.Controller {
     // 2475 × 1750
     gm(oldPath + filePath)
       // width: 1836, height: 1547
-      // .crop(841 - 80, 595 - 80, 40, 40)
+      .crop(841 - 80, 595 - 80, 40, 40)
       // .resize(841 - 80, 595 - 80)
       .write(newPath + newFilePath, (err) => {
         console.log(err);
