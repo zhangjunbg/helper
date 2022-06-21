@@ -2,12 +2,9 @@
 
 module.exports = (app) => {
   const { controller } = app;
-  app.get('/setAllFileNames', controller.file.setAllFileNames);
-  app.get('/getAllFiles', controller.file.getAllFiles);
-  app.get('/pdf2pic2', controller.book.pdf2pic2);
-  app.get('/upperAllNames', controller.file.upperAllNames);
-  app.get('/png2jpg', controller.mini.png2jpg);
-  app.get('/getAllFolderPageNum', controller.file.getAllFolderPageNum);
-  app.get('/pdfParser', controller.pdf.pdfParser);
-  app.get('/cropImg', controller.mini.cropImg);
+  app.get('/removeImgsMargin', controller.split.removeImgsMargin);
+  app.get('/splitImgs', controller.split.splitImgs);
+  // 批量移动文件
+  app.get('/moveFiles', controller.move.moveFiles);
+  
 };
