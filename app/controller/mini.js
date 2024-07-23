@@ -6,8 +6,9 @@ const gm = require('gm');
 const miniList = require('../data/png_dora');
 const cropData = require('../data/convert/niujin');
 const cropDataKeys = Object.keys(cropData);
-const oldPath = '/Volumes/Lily/resource/美语动物园绘本集2/png/book';
-const newPath = '/Volumes/Lily/resource/美语动物园绘本集/jpg';
+const todoList = require('../data/png_dora');
+const oldPath = '/Volumes/Lily/resource/flash/english/zebra1/1';
+const newPath = '/Volumes/Lily/resource/flash/english/zebra1/2';
 module.exports = class MiniController extends egg.Controller {
   png2jpg(ctx) {
     this.allPng2jpg(0);

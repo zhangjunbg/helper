@@ -3,40 +3,30 @@ const fs = require('fs');
 const egg = require('egg');
 const { mkdirsSync } = require('fs-extra');
 const gm = require('gm');
-
-const {top,left,width,height} = require("../data/split/config");
-
-const miniList = require('../data/png_dora');
+const miniList = require('../data/tomini/honghuojian');
 const cropData = require('../data/convert/niujin');
 const cropDataKeys = Object.keys(cropData);
-const oldPath = '/Volumes/Lily/resource/美语动物园绘本集2/png/book';
-const newPath = '/Volumes/Lily/resource/美语动物园绘本集/jpg';
+const oldPath = '/Volumes/Lily/resource/huiben/On_Our_Way_to_English/12';
+const newPath = '/Volumes/Lily/resource/huiben/On_Our_Way_to_English/111';
 module.exports = class MiniController extends egg.Controller {
-  splitPng(ctx) {
-    this.allPng2jpg(0);
+  miniJpg(ctx) {
+    this.allMiniJpg(0);
     ctx.body = {};
   }
-  allPng2jpg(index) {
+  allMiniJpg(index) {
     let filePath = miniList[index];
-    let reg = /(\/.*)\/(.*?)\.png/;
+    let reg = /(\/.*)\/(.*?)\.jpg/;
     let [a, otherFolder, pageIndex] = reg.exec(filePath);
 
-    let newFilePath = `/${otherFolder}/${pageIndex}.jpg`;
-
-    mkdirsSync(`${newPath}/${otherFolder}`);
-    // 1275 × 1755
-    // width: 1035,
-    // height: 1455,
-    // 1450, 1877
-    // 2550 / 2, 3300 / 2
-    // 2475 × 1750
+    let newFilePath = `/${otherFolder}.jpg`;
+    mkdirsSync(`${newPath}`);
     gm(oldPath + filePath)
       // width: 1836, height: 1547
-      .crop(841 - 80, 595 - 80, 40, 40)
-      // .resize(841 - 80, 595 - 80)
+      // .crop(841 - 80, 595 - 80, 40, 40)
+      .resize(142, 184)
       .write(newPath + newFilePath, (err) => {
         console.log(err);
-        this.allPng2jpg(++index);
+        this.allMiniJpg(++index);
       });
   }
   cropImg(ctx) {

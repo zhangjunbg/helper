@@ -3,60 +3,83 @@ const fs = require('fs');
 const egg = require('egg');
 const { mkdirsSync } = require('fs-extra');
 const gm = require('gm');
-
-const { top, left2,top2, left, width, height, oldPath, newPath, originImgList, split } = require('../data/split/index');
-
+const miniList = require('../data/png_dora');
+const cropData = require('../data/convert/niujin');
+const cropDataKeys = Object.keys(cropData);
+const oldPath = '/Volumes/Lily/resource/美语动物园绘本集2/png/book';
+const newPath = '/Volumes/Lily/resource/美语动物园绘本集/jpg';
 module.exports = class MiniController extends egg.Controller {
-  // 去除白边
-  removeImgsMargin(ctx) {
-    this.doRemove(0);
+  splitPng(ctx) {
+    this.allPng2jpg(0);
     ctx.body = {};
   }
-  doRemove(index) {
-    let filePath = originImgList[index];
-    mkdirsSync(`${newPath}`);
+  allPng2jpg(index) {
+    let filePath = miniList[index];
+    let reg = /(\/.*)\/(.*?)\.png/;
+    let [, otherFolder, pageIndex] = reg.exec(filePath);
+
+    let newFilePath = `/${otherFolder}/${pageIndex}.jpg`;
+
+    mkdirsSync(`${newPath}/${otherFolder}`);
+    // 1275 × 1755
+    // width: 1035,
+    // height: 1455,
+    // 1450, 1877
+    // 2550 / 2, 3300 / 2
+    // 2475 × 1750
     gm(oldPath + filePath)
-      .crop(width - 2 * left, height - 2 * top, left2, top2)
-      .write(newPath + filePath, (err) => {
+      // width: 1836, height: 1547
+      .crop(841 - 80, 595 - 80, 40, 40)
+      // .resize(841 - 80, 595 - 80)
+      .write(newPath + newFilePath, (err) => {
         console.log(err);
-        if (index + 1 < originImgList.length) this.doRemove(++index);
+        this.allPng2jpg(++index);
       });
   }
-  // 分割图片
-  splitImgs(ctx) {
-    // 按几行几列裁剪
-    const { row, col } = split;
-    // 裁剪后小图的宽
-    let smallImgW = Math.floor((width - 2 * left) / col);
-    // 裁剪后小图的高
-    let smallImgH = Math.floor((height - 2 * top) / row);
-    mkdirsSync(`${newPath}`);
-    this.splitImg(0, smallImgW, smallImgH, row, col);
+  cropImg(ctx) {
+    this.allCropImg(0);
     ctx.body = {};
   }
-  // 按规则分割一张图片
-  splitImg(index, w, h, row, col) {
-    let filePath = originImgList[index];
-    let reg = /\/(.*?)\.jpg/;
-    let [a, pageIndex] = reg.exec(filePath);
+  allCropImg(index) {
+    let singleData = cropData[cropDataKeys[index]];
+    let { width, height, x, orient } = singleData;
+    let filePath = singleData.path;
+    // let filePath = '/' + cropDataKeys[index];
 
-    for (let i = 0; i < row; i++) {
-      for (let j = 0; j < col; j++) {
-        this.doSplit(oldPath + filePath, `${newPath}/${pageIndex}_${i}_${j}.jpg`, w, h, w * j, h * i);
+    let oldFolder = oldPath + filePath;
+    let newFolder = newPath + filePath;
+    let w = 0,
+      h = 0;
+
+    if (orient == 'right') {
+      w = -x;
+    } else if (orient == 'bottom') {
+      h = -x;
+    }
+
+    let opt = { width: width + w, height: height + h, x: 0, y: 0, oWidth: width, oHeight: parseInt((width * 1222) / 1600) };
+    mkdirsSync(newFolder);
+    // 获取文件夹下文件
+    let files = fs.readdirSync(oldFolder);
+    console.log(opt);
+    let temp;
+    for (let i = 0; i < files.length; i++) {
+      temp = files[i].replace('.png', '.jpg');
+      if (files[i].endsWith('.png')) {
+        this.cropImg2(oldFolder + '/' + files[i], newFolder + '/' + temp, opt);
       }
     }
-    if (index + 1 < originImgList.length) {
-      setTimeout(() => {
-        this.splitImg(index + 1, w, h, row, col);
-      }, 8000);
-    }
+    setTimeout(() => {
+      this.allCropImg(++index);
+    }, 300 * files.length);
   }
-  doSplit(oldFilePath, newFilePath, w, h, l, t) {
-    // console.log(oldFilePath, newFilePath, w, h, l, t);
-    gm(oldFilePath)
-      .crop(w, h, l, t)
-      .write(newFilePath, (err) => {
-        if (err) console.log(err);
+  cropImg2(oldFile, newFile, opt = {}) {
+    let { width, height, x, y, oWidth, oHeight } = opt;
+    gm(oldFile)
+      .crop(width, height, x, y)
+      .resize(oWidth, oHeight, '!')
+      .write(newFile, (err) => {
+        console.log(err);
       });
   }
 };

@@ -29,22 +29,12 @@ module.exports = class CommController extends egg.Controller {
       rimraf.sync(newPath + fileName);
       // 创建文件
       mkdirsSync(newPath + fileName);
-      fromPath(oldPath + filePath, {
-        width: 1860,
-        height: 1313,
-        // width: 3364,
-        // height: 2380,
-        saveFilename: 'test',
-        density: 330,
-        savePath: newPath + fileName,
-      })
-        .bulk(-1)
-        .then((data) => {
-          console.log(newPath + fileName, ':完成');
-          setTimeout(() => {
-            this.pdf2pic(++index);
-          }, 1000);
-        });
+      fromPath(oldPath + filePath, { width: 1860, height: 1313, saveFilename: 'test', density: 330, savePath: newPath + fileName }).bulk(-1).then((data) => {
+        console.log(newPath + fileName, ':完成');
+        setTimeout(() => {
+          this.pdf2pic(++index);
+        }, 1000);
+      });
     } else {
       return null;
     }
